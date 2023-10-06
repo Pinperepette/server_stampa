@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-
 from flask import Flask, request, render_template, redirect, url_for
+from werkzeug.utils import secure_filename
 import os
 import cups
 
@@ -25,7 +25,9 @@ def index():
     if request.method == 'POST':
         uploaded_file = request.files['file']
         if uploaded_file.filename != '':
-            file_path = os.path.join("uploads", uploaded_file.filename)
+            # Utilizza secure_filename per ottenere un nome di file sicuro
+            filename = secure_filename(uploaded_file.filename)
+            file_path = os.path.join("uploads", filename)
             uploaded_file.save(file_path)
             printer_name = request.form['printer']
             if print_document(file_path, printer_name):
